@@ -30,12 +30,10 @@ class FileManagerPaciente:
             for line in f:
                 if line.strip():
                     obj = Paciente.from_line(line)
-                    # Cambiado de obj.datos['id'] a obj['id']
                     pacientes[obj['id']] = obj
         return pacientes
 
     def get_all(self):
-        # Cambiado de p.datos a p
         return [p for p in self._read_file().values()]
 
     def _write_file(self, pacientes):
@@ -209,57 +207,44 @@ class FileManagerCita:
             for line in f:
                 if line.strip():
                     obj = Cita.from_line(line)
-                    # CORRECCIÓN: Usamos obj['id'] porque es un diccionario
                     citas[obj['id']] = obj 
         return citas
 
     def get_all(self):
-        # CORRECCIÓN: Se quita el .datos para que devuelva la lista de diccionarios
         return [c for c in self._read_file().values()]
 
     def _write_file(self, citas):
         with open(self.filename, "w") as f:
             for c in citas.values():
-                # Construimos la línea manualmente usando las llaves del diccionario
-                # Asegúrate de que el orden sea: id|id_paciente|id_doctor|fecha|hora|estado
+           
                 linea = f"{c['id']}|{c['id_paciente']}|{c['id_doctor']}|{c['fecha']}|{c['hora']}|{c['estado']}"
                 f.write(linea + "\n")
 
     def insert(self, id_paciente, id_doctor, fecha, hora):
         from models import Cita
         actuales = self._read_file()
-        
-        # CORRECCIÓN: Validamos usando corchetes porque 'c' es un diccionario
         for c in actuales.values():
             if (c['id_doctor'] == id_doctor and 
                 c['fecha'] == fecha and 
                 c['hora'] == hora):
-                return None # Ya existe una cita a esa hora
+                return None 
         
         new_id = self._get_next_id()
-        # El estado inicial siempre es PENDIENTE
         estado = "PENDIENTE"
         
-        # Guardamos en el archivo TXT (Formato: id|id_p|id_d|fecha|hora|estado)
         with open(self.filename, "a") as f:
             linea = f"{new_id}|{id_paciente}|{id_doctor}|{fecha}|{hora}|{estado}"
             f.write(linea + "\n")
             
-        # Retornamos el diccionario para que el Action sepa que fue exitoso
         return {"id": new_id, "id_paciente": id_paciente, "id_doctor": id_doctor, 
                 "fecha": fecha, "hora": hora, "estado": estado}
 
     def finalizar_cita(self, id_cita, diagnostico):
         citas = self._read_file()
         
-        # Acceso con corchetes porque es un diccionario
         if id_cita in citas and citas[id_cita]['estado'] == "PENDIENTE":
             citas[id_cita]['estado'] = "FINALIZADA"
-            
-            # Aquí es donde se llama al _write_file que acabamos de corregir
             self._write_file(citas)
-            
-            # Guardamos en el historial
             fm_hist = FileManagerHistoriaClinica()
             fm_hist.insert(
                 citas[id_cita]['id_paciente'],
@@ -308,12 +293,11 @@ class FileManagerHistoriaClinica:
             for line in f:
                 if line.strip():
                     obj = HistoriaClinica.from_line(line)
-                    # CORRECCIÓN: Acceso directo al ID del diccionario
                     historias[obj['id']] = obj 
         return historias
 
     def get_all(self):
-        # CORRECCIÓN: Se elimina el .datos
+
         return [h for h in self._read_file().values()]
 
     def obtener_datos_reporte(self):
@@ -322,8 +306,6 @@ class FileManagerHistoriaClinica:
         fm_p = FileManagerPaciente()
         fm_d = FileManagerDoctor()
         
-        # CORRECCIÓN: Como get_all ya devuelve diccionarios, 
-        # accedemos con ['id'] y ['nombre']
         nombres_pacientes = {p['id']: p['nombre'] for p in fm_p.get_all()}
         nombres_doctores = {d['id']: d['nombre'] for d in fm_d.get_all()}
         
