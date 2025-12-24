@@ -1,0 +1,12 @@
+def mostrar_menu_principal():
+    print("========================================")
+    print("      SISTEMA DE GESTIÓN MÉDICA         ")
+    print("========================================")
+    print("1. Gestionar Pacientes")
+    print("2. Gestionar Especialidades")
+    print("3. Gestionar Doctores")
+    print("4. Agendar Citas")
+    print("5. Historial Clínico")
+    print("6. Reporte Médico General")
+    print("7. Salir")
+    print("========================================")

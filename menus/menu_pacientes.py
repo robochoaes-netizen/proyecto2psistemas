@@ -1,0 +1,10 @@
+def mostrar_menu_pacientes():
+    print("\n" + "="*30)
+    print("   GESTIÓN DE PACIENTES")
+    print("="*30)
+    print("1. Listar todos los pacientes")
+    print("2. Registrar nuevo paciente")
+    print("3. Actualizar datos de paciente")
+    print("4. Eliminar paciente")
+    print("5. Volver al menú principal")
+    print("="*30)

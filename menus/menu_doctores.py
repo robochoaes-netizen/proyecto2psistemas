@@ -1,0 +1,10 @@
+def mostrar_menu_doctores():
+    print("\n" + "="*35)
+    print("      GESTIÓN DE DOCTORES")
+    print("="*35)
+    print("1. Listar todos los doctores")
+    print("2. Registrar nuevo doctor")
+    print("3. Actualizar datos de doctor")
+    print("4. Eliminar doctor")
+    print("5. Volver al menú principal")
+    print("="*35)
